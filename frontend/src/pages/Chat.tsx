@@ -5,11 +5,7 @@ import { useAuth } from "../context/AuthContext";
 import ChatItem from "../components/chat/ChatItem";
 import { IoMdSend } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
-import {
-  deleteUserChats,
-  getUserChats,
-  sendChatRequest,
-} from "../helpers/api-communicator";
+import { deleteUserChats, getUserChats, sendChatRequest } from "../helpers/api-communicator";
 import toast from "react-hot-toast";
 
 type Message = {
@@ -20,7 +16,7 @@ type Message = {
 const Chat = () => {
   const navigate = useNavigate();
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const bottomRef = useRef<HTMLDivElement | null>(null); // For auto scroll
+  const bottomRef = useRef<HTMLDivElement | null>(null);
   const auth = useAuth();
   const [chatMessages, setChatMessages] = useState<Message[]>([]);
 
@@ -30,32 +26,20 @@ const Chat = () => {
       toast.error("Message cannot be empty");
       return;
     }
-
     if (inputRef.current) inputRef.current.value = "";
-
     const newMessage: Message = { role: "user", content };
     setChatMessages((prev) => [...prev, newMessage]);
 
     try {
       const chatData = await sendChatRequest(content);
-      if (chatData?.chats) {
-        setChatMessages([...chatData.chats]);
-      } else {
-        toast.error("Unexpected response from server.");
-      }
+      if (chatData?.chats) setChatMessages([...chatData.chats]);
+      else toast.error("Unexpected response from server.");
     } catch (error: any) {
-      if (error.response) {
-        console.error("🔴 Backend Error:", error.response.data); // Important
-        toast.error(error.response.data?.message || "Failed to send message.");
-      } else if (error.request) {
-        console.error("🟠 Request made, but no response:", error.request);
-        toast.error("No response from server.");
-      } else {
-        console.error("🟡 Something else went wrong:", error.message);
-        toast.error("Unexpected error occurred.");
-      }
+      if (error.response) toast.error(error.response.data?.message || "Failed to send message.");
+      else if (error.request) toast.error("No response from server.");
+      else toast.error("Unexpected error occurred.");
     }
-  };    
+  };
 
   const handleDeleteChats = async () => {
     try {
@@ -64,7 +48,6 @@ const Chat = () => {
       setChatMessages([]);
       toast.success("Deleted Chats Successfully", { id: "deletechats" });
     } catch (error) {
-      console.log(error);
       toast.error("Deleting chats failed", { id: "deletechats" });
     }
   };
@@ -77,17 +60,12 @@ const Chat = () => {
           setChatMessages([...data.chats]);
           toast.success("Successfully loaded chats", { id: "loadchats" });
         })
-        .catch((err) => {
-          console.log(err);
-          toast.error("Loading Failed", { id: "loadchats" });
-        });
+        .catch(() => toast.error("Loading Failed", { id: "loadchats" }));
     }
   }, [auth]);
 
   useEffect(() => {
-    if (!auth?.user) {
-      return navigate("/login");
-    }
+    if (!auth?.user) navigate("/login");
   }, [auth]);
 
   useEffect(() => {
@@ -95,63 +73,60 @@ const Chat = () => {
   }, [chatMessages]);
 
   return (
-    <Box sx={{ display: "flex", flex: 1, width: "100%", height: "100%", mt: 3, gap: 3 }}>
+    <Box sx={{ display: "flex", flex: 1, width: "100%", minHeight: "100vh", mt: 3, gap: 3, px: 2 }}>
       {/* Sidebar */}
       <Box
         sx={{
-          display: { md: "flex", xs: "none", sm: "none" },
-          flex: 0.2,
+          display: { md: "flex", xs: "none" },
+          flex: 0.25,
           flexDirection: "column",
         }}
       >
         <Box
           sx={{
             display: "flex",
-            width: "100%",
-            height: "60vh",
-            bgcolor: "rgb(17,29,39)",
-            borderRadius: 5,
             flexDirection: "column",
-            mx: 3,
+            alignItems: "center",
+            bgcolor: "rgba(255,255,255,0.05)",
+            backdropFilter: "blur(12px)",
+            borderRadius: 3,
+            boxShadow: "0 8px 25px rgba(100, 243, 213, 0.3)",
+            px: 3,
+            py: 4,
+            height: "70vh",
+            mx: "auto",
           }}
         >
           <Avatar
             sx={{
               mx: "auto",
-              my: 2,
-              bgcolor: "white",
-              color: "black",
+              mb: 2,
+              bgcolor: "#64f3d5",
+              color: "#000",
               fontWeight: 700,
             }}
           >
             {(() => {
               const name = auth?.user?.name || "";
               const parts = name.trim().split(" ");
-              const firstInitial = parts[0]?.[0] || "";
-              const secondInitial = parts[1]?.[0] || "";
-              return firstInitial + secondInitial;
+              return (parts[0]?.[0] || "") + (parts[1]?.[0] || "");
             })()}
           </Avatar>
-          <Typography sx={{ mx: "auto", fontFamily: "work sans" }}>
-            You are talking to a ChatBOT
+          <Typography sx={{ textAlign: "center", fontWeight: 600, mb: 2 }}>
+            You are talking to Lexi AI
           </Typography>
-          <Typography sx={{ mx: "auto", fontFamily: "work sans", my: 4, p: 3 }}>
-            You can ask questions related to Knowledge, Business, Advice, Education, etc.
-            But avoid sharing personal information.
+          <Typography sx={{ textAlign: "center", fontSize: "0.9rem", color: "#ccc", mb: 4 }}>
+            Ask questions related to Knowledge, Business, Advice, Education, etc. Avoid sharing personal info.
           </Typography>
           <Button
             onClick={handleDeleteChats}
             sx={{
-              width: "200px",
-              my: "auto",
-              color: "white",
-              fontWeight: "700",
+              width: "180px",
+              color: "#fff",
+              fontWeight: 700,
               borderRadius: 3,
-              mx: "auto",
-              bgcolor: red[300],
-              ":hover": {
-                bgcolor: red.A400,
-              },
+              bgcolor: red[400],
+              ":hover": { bgcolor: red.A400 },
             }}
           >
             Clear Conversation
@@ -160,21 +135,16 @@ const Chat = () => {
       </Box>
 
       {/* Chat Area */}
-      <Box
-        sx={{
-          display: "flex",
-          flex: { md: 0.8, xs: 1, sm: 1 },
-          flexDirection: "column",
-          px: 3,
-        }}
-      >
+      <Box sx={{ display: "flex", flex: { md: 0.75, xs: 1 }, flexDirection: "column" }}>
         <Typography
           sx={{
-            fontSize: "40px",
-            color: "white",
+            fontSize: { xs: "1.8rem", md: "2.5rem" },
+            fontWeight: 600,
+            textAlign: "center",
             mb: 2,
-            mx: "auto",
-            fontWeight: "600",
+            background: "linear-gradient(90deg,#64f3d5,#b266ff)",
+            WebkitBackgroundClip: "text",
+            color: "transparent",
           }}
         >
           Model - GPT 3.5 Turbo
@@ -182,14 +152,16 @@ const Chat = () => {
 
         <Box
           sx={{
-            width: "100%",
-            height: "60vh",
+            flex: 1,
+            height: "65vh",
             borderRadius: 3,
-            mx: "auto",
-            display: "flex",
-            flexDirection: "column",
             overflowY: "auto",
-            scrollBehavior: "smooth",
+            px: 2,
+            py: 1,
+            mb: 2,
+            bgcolor: "rgba(255,255,255,0.05)",
+            backdropFilter: "blur(12px)",
+            boxShadow: "0 8px 30px rgba(100, 243, 213, 0.2)",
           }}
         >
           {chatMessages.map((chat, index) => (
@@ -199,13 +171,17 @@ const Chat = () => {
         </Box>
 
         {/* Input Box */}
-        <div
-          style={{
-            width: "100%",
-            borderRadius: 8,
-            backgroundColor: "rgb(17,27,39)",
+        <Box
+          sx={{
             display: "flex",
-            margin: "auto",
+            borderRadius: 3,
+            bgcolor: "rgba(255,255,255,0.05)",
+            backdropFilter: "blur(12px)",
+            px: 2,
+            py: 1,
+            boxShadow: "0 4px 20px rgba(100,243,213,0.3)",
+            alignItems: "center",
+            gap: 1,
           }}
         >
           <input
@@ -213,19 +189,19 @@ const Chat = () => {
             type="text"
             placeholder="Type your message..."
             style={{
-              width: "100%",
+              flex: 1,
               backgroundColor: "transparent",
-              padding: "30px",
+              padding: "15px",
               border: "none",
               outline: "none",
-              color: "white",
-              fontSize: "20px",
+              color: "#fff",
+              fontSize: "1rem",
             }}
           />
-          <IconButton onClick={handleSubmit} sx={{ color: "white", mx: 1 }}>
-            <IoMdSend />
+          <IconButton onClick={handleSubmit} sx={{ color: "#64f3d5" }}>
+            <IoMdSend fontSize={24} />
           </IconButton>
-        </div>
+        </Box>
       </Box>
     </Box>
   );

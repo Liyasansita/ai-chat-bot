@@ -6,62 +6,106 @@ import Footer from "../components/footer/Footer";
 const Home = () => {
   const theme = useTheme();
   const isBelowMd = useMediaQuery(theme.breakpoints.down("md"));
+
   return (
-    <Box width={"100%"} height={"100%"}>
+    <Box
+      width="100%"
+      minHeight="100vh"
+      sx={{
+        background: "linear-gradient(135deg, #0d0d0d, #111827, #0d0d0d)",
+        color: "#fff",
+        py: 5,
+      }}
+    >
       <Box
         sx={{
           display: "flex",
-          width: "100%",
           flexDirection: "column",
           alignItems: "center",
           mx: "auto",
-          mt: 3,
+          px: 2,
         }}
       >
-        <Box>
+        {/* Typing Animation */}
+        <Box sx={{ mb: 6 }}>
           <TypingAnim />
         </Box>
+
+        {/* Image Section */}
         <Box
           sx={{
-            width: "100%",
             display: "flex",
-            flexDirection: { md: "row", xs: "column", sm: "column" },
-            gap: 5,
-            my: 10,
+            flexDirection: { xs: "column", md: "row" },
+            gap: 6,
+            alignItems: "center",
+            justifyContent: "center",
+            mb: 8,
           }}
         >
-          <img
-            src="robot.png"
-            alt="robot"
-            style={{ width: "200px", margin: "auto" }}
-          />
-          <img
-            className="image-inverted rotate"
-            src="openai.png"
-            alt="openai"
-            style={{ width: "200px", margin: "auto" }}
-          />
+          <Box
+            sx={{
+              background: "rgba(0,255,200,0.05)",
+              p: 3,
+              borderRadius: 3,
+              boxShadow: "0 8px 25px rgba(0,255,200,0.4)",
+              transition: "transform 0.3s, box-shadow 0.3s",
+              "&:hover": { transform: "scale(1.05)", boxShadow: "0 12px 35px rgba(0,255,200,0.6)" },
+            }}
+          >
+            <img
+              src="robot.png"
+              alt="robot"
+              style={{ width: "200px", display: "block", margin: "auto" }}
+            />
+          </Box>
+          <Box
+            sx={{
+              background: "rgba(178,102,255,0.05)",
+              p: 3,
+              borderRadius: 3,
+              boxShadow: "0 8px 25px rgba(178,102,255,0.4)",
+              transition: "transform 0.3s, box-shadow 0.3s",
+              "&:hover": { transform: "scale(1.05)", boxShadow: "0 12px 35px rgba(178,102,255,0.6)" },
+            }}
+          >
+            <img
+              className="image-inverted rotate"
+              src="openai.png"
+              alt="openai"
+              style={{ width: "200px", display: "block", margin: "auto" }}
+            />
+          </Box>
         </Box>
-        <Box sx={{ display: "flex", mx: "auto" }}>
+
+        {/* Chat Image */}
+        <Box
+          sx={{
+            background: "rgba(0,255,200,0.05)",
+            borderRadius: 3,
+            boxShadow: "0 12px 45px rgba(0,255,200,0.3)",
+            p: 2,
+            maxWidth: isBelowMd ? "90%" : "70%",
+            mx: "auto",
+            mb: 5,
+            transition: "transform 0.3s, box-shadow 0.3s",
+            "&:hover": { transform: "scale(1.02)", boxShadow: "0 16px 55px rgba(0,255,200,0.5)" },
+          }}
+        >
           <img
             src="chat.png"
             alt="chatbot"
             style={{
-              display: "flex",
-              margin: "auto",
-              width: isBelowMd ? "80%" : "60%",
+              width: "100%",
               borderRadius: 20,
-              boxShadow: "-5px -5px 105px #64f3d5",
-              marginTop: 20,
-              marginBottom: 20,
-              padding: 10,
             }}
           />
         </Box>
       </Box>
+
       <Footer />
     </Box>
   );
 };
 
 export default Home;
+

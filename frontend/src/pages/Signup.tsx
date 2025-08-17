@@ -5,90 +5,121 @@ import CustomizedInput from "../components/shared/CustomizedInput";
 import { toast } from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+
 const Signup = () => {
   const navigate = useNavigate();
   const auth = useAuth();
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const name = formData.get("name") as string;
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
+
     try {
       toast.loading("Signing Up", { id: "signup" });
       await auth?.signup(name, email, password);
       toast.success("Signed Up Successfully", { id: "signup" });
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast.error("Signing Up Failed", { id: "signup" });
     }
   };
+
   useEffect(() => {
-    if (auth?.user) {
-      return navigate("/chat");
-    }
+    if (auth?.user) navigate("/chat");
   }, [auth]);
+
   return (
-    <Box width={"100%"} height={"100%"} display="flex" flex={1}>
-      <Box padding={8} mt={8} display={{ md: "flex", sm: "none", xs: "none" }}>
-        <img src="airobot.png" alt="Robot" style={{ width: "400px" }} />
-      </Box>
+    <Box
+      width="100%"
+      minHeight="100vh"
+      display="flex"
+      sx={{
+        background: "linear-gradient(135deg, #0d0d0d, #1a1a2e, #0d0d0d)",
+        color: "#fff",
+      }}
+    >
+      {/* Left Image for md+ */}
       <Box
-        display={"flex"}
+        flex={{ md: 0.5 }}
+        display={{ md: "flex", xs: "none", sm: "none" }}
+        justifyContent="center"
+        alignItems="center"
+        sx={{ p: 4 }}
+      >
+        <img
+          src="airobot.png"
+          alt="Robot"
+          style={{
+            width: "350px",
+            borderRadius: "10px",
+            boxShadow: "0 8px 30px rgba(100,243,213,0.5)",
+          }}
+        />
+      </Box>
+
+      {/* Signup Form */}
+      <Box
         flex={{ xs: 1, md: 0.5 }}
-        justifyContent={"center"}
-        alignItems={"center"}
-        padding={2}
-        ml={"auto"}
-        mt={16}
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        sx={{ px: 2 }}
       >
         <form
           onSubmit={handleSubmit}
           style={{
-            margin: "auto",
+            width: "100%",
+            maxWidth: "400px",
             padding: "30px",
-            boxShadow: "10px 10px 20px #000",
-            borderRadius: "10px",
-            border: "none",
+            borderRadius: "15px",
+            background: "rgba(255,255,255,0.05)",
+            backdropFilter: "blur(12px)",
+            boxShadow: "0 8px 30px rgba(100,243,213,0.3)",
+            display: "flex",
+            flexDirection: "column",
+            gap: "20px",
           }}
         >
-          <Box
+          <Typography
+            variant="h4"
+            textAlign="center"
+            fontWeight={700}
             sx={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
+              background: "linear-gradient(90deg, #64f3d5, #b266ff)",
+              WebkitBackgroundClip: "text",
+              color: "transparent",
             }}
           >
-            <Typography
-              variant="h4"
-              textAlign="center"
-              padding={2}
-              fontWeight={600}
-            >
-              Signup
-            </Typography>
-            <CustomizedInput type="text" name="name" label="Name" />
-            <CustomizedInput type="email" name="email" label="Email" />
-            <CustomizedInput type="password" name="password" label="Password" />
-            <Button
-              type="submit"
-              sx={{
-                px: 2,
-                py: 1,
-                mt: 2,
-                width: "400px",
-                borderRadius: 2,
-                bgcolor: "#00fffc",
-                ":hover": {
-                  bgcolor: "white",
-                  color: "black",
-                },
-              }}
-              endIcon={<IoIosLogIn />}
-            >
-              Signup
-            </Button>
-          </Box>
+            Lexi AI Signup
+          </Typography>
+
+          <CustomizedInput type="text" name="name" label="Name" />
+          <CustomizedInput type="email" name="email" label="Email" />
+          <CustomizedInput type="password" name="password" label="Password" />
+
+          <Button
+            type="submit"
+            endIcon={<IoIosLogIn />}
+            sx={{
+              px: 2,
+              py: 1.5,
+              borderRadius: 3,
+              bgcolor: "#64f3d5",
+              color: "#000",
+              fontWeight: 700,
+              fontSize: "1rem",
+              transition: "0.3s",
+              ":hover": {
+                bgcolor: "#b266ff",
+                color: "#fff",
+              },
+            }}
+          >
+            Signup
+          </Button>
         </form>
       </Box>
     </Box>
@@ -96,3 +127,4 @@ const Signup = () => {
 };
 
 export default Signup;
+
