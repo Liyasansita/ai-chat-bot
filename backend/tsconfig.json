@@ -9,3 +9,16 @@
   },
   "include": ["src/**/*.ts", "src/index.ts"]
 }
+// {
+//   "compilerOptions": {
+//     "module": "NodeNext",
+//     "moduleResolution": "NodeNext",
+//     "target": "ES2022",
+//     "sourceMap": true,
+//     "outDir": "dist",
+//     "rootDir": "src",
+//     "allowSyntheticDefaultImports": true,
+//     "strict": true
+//   },
+//   "include": ["src"]
+// }
