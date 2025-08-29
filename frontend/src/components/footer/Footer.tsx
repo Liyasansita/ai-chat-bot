@@ -23,7 +23,7 @@ const Footer = () => {
               liya sansita
             </Link>
           </span>
-          💘
+          
         </p>
       </div>
     </footer>
