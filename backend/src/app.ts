@@ -20,7 +20,6 @@ app.use(
       "https://ai-chat-bot-6.onrender.com"     // deployed frontend
       // OR: process.env.FRONTEND_URL if you prefer env variable
     ],
-    credentials: true,
   })
 );
 
