@@ -14,7 +14,8 @@ Add a .env file with:
 PORT=5000
 MONGO_URI=your_mongodb_connection_string
 JWT_SECRET=your_jwt_secret
-OPENAI_API_KEY=your_openai_api_key
+gemini_api key=any api key 
+node_env=production
 
 
 Start server → npm run dev
